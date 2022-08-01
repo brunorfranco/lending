@@ -42,15 +42,10 @@ public class LoanService {
 
 	@Transactional
 	public Loan updateLoan(Loan loan) {
-		if(loan.getId() == null) {
+		if (loan.getId() == null || !loanRepo.findById(loan.getId()).isPresent()) {
 			throw new ObjectNotFoundException(Loan.class, "Loan");
 		}
-		Optional<Loan> foundLoan = loanRepo.findById(loan.getId());
-		if(foundLoan.isPresent()) {
-			return loanRepo.save(loan);
-		} else {
-			throw new ObjectNotFoundException(Loan.class, "Loan");
-		}
+		return loanRepo.save(loan);
 	}
 
 	public Optional<Loan> findById(Long id) {
