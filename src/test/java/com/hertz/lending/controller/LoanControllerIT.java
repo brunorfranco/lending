@@ -1,5 +1,6 @@
 package com.hertz.lending.controller;
 
+import org.hibernate.ObjectNotFoundException;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ import com.hertz.lending.util.LoanUtils;
 public class LoanControllerIT {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(InitialDataInserter.class);
-	
+
 	private LoanController controller;
 
 	private PersonRepository personRepo;
@@ -47,7 +48,7 @@ public class LoanControllerIT {
 	}
 
 	@Test
-	public void loanBook_firstBooking_true()
+	public void loanBook_firstBooking_success()
 			throws MaxNoLoansExceededException, UnsuccessfulLoanException, OutstandingReturnException {
 		Person person = personRepo.findByFirstName(AppConstants.PERSON_FIRSTNAME_JOHN);
 		Book book = bookRepo.findByTitle(AppConstants.TWILIGHT_TITLE);
@@ -75,6 +76,19 @@ public class LoanControllerIT {
 	}
 
 	@Test
+	public void loanBook_updateLoan_success()
+			throws MaxNoLoansExceededException, UnsuccessfulLoanException, OutstandingReturnException {
+		Person person = personRepo.findByFirstName(AppConstants.PERSON_FIRSTNAME_JOHN);
+		Book book = bookRepo.findByTitle(AppConstants.TWILIGHT_TITLE);
+		Loan loan = new Loan(book, person);
+		loan = controller.lendBook(loan);
+
+		loan.setReturnDate(LoanUtils.yesterday());
+		controller.updateLoan(loan);
+
+	}
+
+	@Test
 	public void loanBook_hasOutstandingReturn_exception()
 			throws MaxNoLoansExceededException, UnsuccessfulLoanException, OutstandingReturnException {
 		Person person = personRepo.findByFirstName(AppConstants.PERSON_FIRSTNAME_JOHN);
@@ -96,5 +110,16 @@ public class LoanControllerIT {
 	public void returnBook_firstBooking_true() {
 		controller.returnBook(1l);
 	}
-	
+
+	@Test
+	public void updateLoan_loanDoesNotExist_exception()
+			throws MaxNoLoansExceededException, UnsuccessfulLoanException, OutstandingReturnException {
+		Person person = personRepo.findByFirstName(AppConstants.PERSON_FIRSTNAME_JOHN);
+		Book book = bookRepo.findByTitle(AppConstants.TWILIGHT_TITLE);
+
+		Assertions.assertThrows(ObjectNotFoundException.class, () -> {
+			controller.updateLoan(new Loan(book, person));
+		});
+	}
+
 }

@@ -2,6 +2,7 @@ package com.hertz.lending.service;
 
 import java.util.Optional;
 
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,15 @@ public class LoanService {
 
 	@Transactional
 	public Loan updateLoan(Loan loan) {
-		return loanRepo.save(loan);
+		if(loan.getId() == null) {
+			throw new ObjectNotFoundException(Loan.class, "Loan");
+		}
+		Optional<Loan> foundLoan = loanRepo.findById(loan.getId());
+		if(foundLoan.isPresent()) {
+			return loanRepo.save(loan);
+		} else {
+			throw new ObjectNotFoundException(Loan.class, "Loan");
+		}
 	}
 
 	public Optional<Loan> findById(Long id) {
