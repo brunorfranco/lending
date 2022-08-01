@@ -2,6 +2,8 @@ package com.hertz.lending.service;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,12 @@ public class CategoryService {
 		this.categoryRepo = categoryRepo;
 	}
 
+	@Transactional
 	public Category add(Category category) {
 		return categoryRepo.save(category);
 	}
 	
+	@Transactional
 	public void remove(Optional<Category> optional) {
 		if(optional.isPresent()) {
 			categoryRepo.delete(optional.get());

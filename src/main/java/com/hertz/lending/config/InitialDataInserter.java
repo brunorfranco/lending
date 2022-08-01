@@ -94,6 +94,9 @@ public class InitialDataInserter implements ApplicationListener<ContextRefreshed
 		Book twilight = new Book("Twilight", "Sthepenie Meyer", categoryRepo.findByName("Romance"));
 		books.add(twilight);
 		
+		Book greatGatsby = new Book("The Great Gatsby", "F. Scott Fitzgerald", categoryRepo.findByName("Romance"));
+		books.add(greatGatsby);
+		
 		bookRepo.saveAll(books);
 		
 		bookRepo.findAll().forEach(b -> System.out.println(b));

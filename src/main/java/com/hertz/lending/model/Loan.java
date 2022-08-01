@@ -1,9 +1,13 @@
 package com.hertz.lending.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import lombok.Data;
@@ -16,11 +20,13 @@ public class Loan {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@OneToOne(optional = false)
+	@OneToOne(optional = false, fetch = FetchType.EAGER)
 	private Book book;
 
-	@OneToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	private Person person;
+	
+	private Date returnDate;
 
 	public Loan() {
 		super();

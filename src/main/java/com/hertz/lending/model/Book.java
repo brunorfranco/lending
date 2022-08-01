@@ -1,22 +1,22 @@
 package com.hertz.lending.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 
 import lombok.Data;
 
 @Entity
 @Data
+@IdClass(BookId.class)
 public class Book {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
 	private String title;
+	@Id
 	private String author;
+
 	@ManyToOne(optional = false)
 	private Category category;
 

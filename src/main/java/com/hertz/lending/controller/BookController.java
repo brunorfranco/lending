@@ -1,5 +1,7 @@
 package com.hertz.lending.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,13 +30,18 @@ public class BookController {
 	}
 
 	@DeleteMapping("/books/{id}")
-	public void deleteBook(@PathVariable Long id) {
-		bookService.remove(bookService.findById(id));
+	public void deleteBook(@PathVariable String title, String author) {
+		bookService.remove(bookService.findById(title, author));
 	}
 	
 	@GetMapping("/books")
 	public Iterable<Book> retrieveBooks() {
 		return bookService.findAll();
+	}
+	
+	@GetMapping("/books{id}")
+	public Optional<Book> retrieveBook(@PathVariable String title, String author) {
+		return bookService.findById(title, author);
 	}
 	
 }

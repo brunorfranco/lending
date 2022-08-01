@@ -1,5 +1,8 @@
 package com.hertz.lending.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
@@ -38,11 +41,31 @@ public class BookControllerIT {
 	}
 	
 	@Test
-	public void deleteBook_validBook_true() {
-		controller.deleteBook(1l);
+	public void recordNewBook_sameBookTwice_fail() {
+		Book janeEyre = new Book("Jane Eyre", "Charlotte Bronte", categoryService.findByName("Fantasy"));
+		controller.addNewBook(janeEyre);
 		
+		Book repeatBook = new Book("Jane Eyre", "Charlotte Bronte", categoryService.findByName("Fantasy"));
+		controller.addNewBook(repeatBook);
 		Iterable<Book> retrieveBooks = controller.retrieveBooks();
-		System.out.println(retrieveBooks);
+		
+		List<Book> resultList = new ArrayList<>();
+		retrieveBooks.forEach(resultList::add);
+		
+		long count = resultList.stream()
+		        .filter(p -> p.getTitle().equals("Jane Eyre"))
+		        .count();
+		Assert.assertEquals(count, 1l);
+		
+	}
+	
+	@Test
+	public void deleteBook_validBook_true() {
+		Iterable<Book> priorRetrievedBooks = controller.retrieveBooks();
+		controller.deleteBook("Harry Potter and the Philosophical Stone", "J. K. Rolling");
+		
+		Iterable<Book> afterRetrievedBooks = controller.retrieveBooks();
+		Assert.assertTrue(!priorRetrievedBooks.equals(afterRetrievedBooks));
 	}
 
 }
