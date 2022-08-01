@@ -8,6 +8,7 @@ Technical notes:
 
 JSON examples to facilitate POSTMAN testing:
 
+BOOK:
 {
    "title":"The House of Mirth",
    "author":"Edith Wharton",
@@ -19,6 +20,7 @@ JSON examples to facilitate POSTMAN testing:
    ]
 }
 
+LOAN:
 {
    "id":null,
    "book":{
