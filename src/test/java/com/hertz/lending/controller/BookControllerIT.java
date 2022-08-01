@@ -1,6 +1,7 @@
 package com.hertz.lending.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.hertz.lending.model.Book;
 import com.hertz.lending.service.CategoryService;
+import com.hertz.lending.util.AppConstants;
 
 @SpringBootTest
 public class BookControllerIT {
@@ -31,21 +33,25 @@ public class BookControllerIT {
 	}
 
 	@Test
-	public void recordNewBook_validBook_true() {
-		Book book = new Book("The Hobbit", "J. K. K. Tolkien", categoryService.findByName("Fantasy"));
+	public void recordNewBook_validBookSingleCategory_true() {
+		Book book = new Book(AppConstants.THE_HOBBIT_TITLE, AppConstants.J_R_R_TOLKIEN, Arrays.asList(categoryService.findByName(AppConstants.FANTASY_CATEGORY)));
 		Book addedBook = controller.addNewBook(book);
 		Assert.assertNotNull(addedBook);
-		
-		Iterable<Book> retrieveBooks = controller.retrieveBooks();
-		System.out.println(retrieveBooks);
+	}
+	
+	@Test
+	public void recordNewBook_validBookMultipleCategories_true() {
+		Book book = new Book(AppConstants.THE_HOBBIT_TITLE, AppConstants.J_R_R_TOLKIEN, Arrays.asList(categoryService.findByName(AppConstants.FANTASY_CATEGORY), categoryService.findByName(AppConstants.ROMANCE_CATEGORY)));
+		Book addedBook = controller.addNewBook(book);
+		Assert.assertNotNull(addedBook);
 	}
 	
 	@Test
 	public void recordNewBook_sameBookTwice_fail() {
-		Book janeEyre = new Book("Jane Eyre", "Charlotte Bronte", categoryService.findByName("Fantasy"));
+		Book janeEyre = new Book(AppConstants.JANE_EYRE_TITLE, AppConstants.CHARLOTTE_BRONTE, Arrays.asList(categoryService.findByName(AppConstants.FANTASY_CATEGORY)));
 		controller.addNewBook(janeEyre);
 		
-		Book repeatBook = new Book("Jane Eyre", "Charlotte Bronte", categoryService.findByName("Fantasy"));
+		Book repeatBook = new Book(AppConstants.JANE_EYRE_TITLE, AppConstants.CHARLOTTE_BRONTE, Arrays.asList(categoryService.findByName(AppConstants.FANTASY_CATEGORY)));
 		controller.addNewBook(repeatBook);
 		Iterable<Book> retrieveBooks = controller.retrieveBooks();
 		
@@ -53,7 +59,7 @@ public class BookControllerIT {
 		retrieveBooks.forEach(resultList::add);
 		
 		long count = resultList.stream()
-		        .filter(p -> p.getTitle().equals("Jane Eyre"))
+		        .filter(p -> p.getTitle().equals(AppConstants.JANE_EYRE_TITLE))
 		        .count();
 		Assert.assertEquals(count, 1l);
 		

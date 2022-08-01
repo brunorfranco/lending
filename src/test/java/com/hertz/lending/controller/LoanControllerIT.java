@@ -4,9 +4,12 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.hertz.lending.config.InitialDataInserter;
 import com.hertz.lending.controller.LoanController;
 import com.hertz.lending.exception.MaxNoLoansExceededException;
 import com.hertz.lending.exception.OutstandingReturnException;
@@ -16,11 +19,14 @@ import com.hertz.lending.model.Loan;
 import com.hertz.lending.model.Person;
 import com.hertz.lending.repository.BookRepository;
 import com.hertz.lending.repository.PersonRepository;
+import com.hertz.lending.util.AppConstants;
 import com.hertz.lending.util.LoanUtils;
 
 @SpringBootTest
 public class LoanControllerIT {
 
+	public static final Logger LOGGER = LoggerFactory.getLogger(InitialDataInserter.class);
+	
 	private LoanController controller;
 
 	private PersonRepository personRepo;
@@ -43,8 +49,8 @@ public class LoanControllerIT {
 	@Test
 	public void loanBook_firstBooking_true()
 			throws MaxNoLoansExceededException, UnsuccessfulLoanException, OutstandingReturnException {
-		Person person = personRepo.findByFirstName("John");
-		Book book = bookRepo.findByTitle("Twilight");
+		Person person = personRepo.findByFirstName(AppConstants.PERSON_FIRSTNAME_JOHN);
+		Book book = bookRepo.findByTitle(AppConstants.TWILIGHT_TITLE);
 		Loan loan = new Loan(book, person);
 		Loan recordedLoan = controller.lendBook(loan);
 		Assert.assertNotNull(recordedLoan);
@@ -52,7 +58,7 @@ public class LoanControllerIT {
 
 	@Test
 	public void loanBook_moreThan3Books_exception() {
-		Person person = personRepo.findByFirstName("John");
+		Person person = personRepo.findByFirstName(AppConstants.PERSON_FIRSTNAME_JOHN);
 
 		/**
 		 * There are 4 books initially setup so it will fail on the 4th
@@ -60,7 +66,7 @@ public class LoanControllerIT {
 		bookRepo.findAll().forEach(b -> {
 			Loan loan = new Loan(b, person);
 			try {
-				System.out.println("Lending book: " + controller.lendBook(loan));
+				LOGGER.info("Lending book: " + controller.lendBook(loan));
 			} catch (MaxNoLoansExceededException | UnsuccessfulLoanException | OutstandingReturnException e) {
 				Assert.assertTrue(true);
 			}
@@ -71,8 +77,8 @@ public class LoanControllerIT {
 	@Test
 	public void loanBook_hasOutstandingReturn_exception()
 			throws MaxNoLoansExceededException, UnsuccessfulLoanException, OutstandingReturnException {
-		Person person = personRepo.findByFirstName("John");
-		Book book = bookRepo.findByTitle("Twilight");
+		Person person = personRepo.findByFirstName(AppConstants.PERSON_FIRSTNAME_JOHN);
+		Book book = bookRepo.findByTitle(AppConstants.TWILIGHT_TITLE);
 		Loan loan = new Loan(book, person);
 		loan = controller.lendBook(loan);
 		/**
@@ -82,7 +88,7 @@ public class LoanControllerIT {
 		controller.updateLoan(loan);
 
 		Assertions.assertThrows(OutstandingReturnException.class, () -> {
-			controller.lendBook(new Loan(bookRepo.findByTitle("The Great Gatsby"), person));
+			controller.lendBook(new Loan(bookRepo.findByTitle(AppConstants.THE_GREAT_GATSBY_TITLE), person));
 		});
 	}
 

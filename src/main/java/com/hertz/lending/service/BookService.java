@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,8 @@ public class BookService {
 	public void remove(Optional<Book> optional) {
 		if(optional.isPresent()) {
 			bookRepo.delete(optional.get());
+		} else {
+			throw new ObjectNotFoundException(Book.class, "book");
 		}
 	}
 	

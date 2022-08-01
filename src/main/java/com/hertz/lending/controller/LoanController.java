@@ -15,6 +15,12 @@ import com.hertz.lending.exception.UnsuccessfulLoanException;
 import com.hertz.lending.model.Loan;
 import com.hertz.lending.service.LoanService;
 
+/**
+ * Controller class which exposes basic interactions with the Loan resource
+ * 
+ * @author Bruno Franco
+ *
+ */
 @RestController
 public class LoanController {
 
