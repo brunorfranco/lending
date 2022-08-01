@@ -3,7 +3,7 @@ Technical notes:
 	Run LendingApplication class to startup the application (configuration reliant on the embedeed tomcat)
 	Default URL and port: localhost:8080
 	Lombok was used to remove unnecessary boilerplate code, so please install it on your IDE for the project to compile: https://www.baeldung.com/lombok-ide
-	JRE 8 or above required (lambda expressions and functinal snippets used throughout the code base)
+	JDK 8 or above required (lambda expressions and functinal snippets used throughout the code base)
 	H2 in-memory database - Information will be lost when the application shuts down (InitialDataInserter class will insert a few entries at start-up to facilitate tests)
 
 JSON examples to facilitate POSTMAN testing:
