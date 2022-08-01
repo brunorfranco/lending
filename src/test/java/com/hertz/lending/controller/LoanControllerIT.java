@@ -39,7 +39,7 @@ public class LoanControllerIT {
 		Person person = personRepo.findByFirstName("John");
 		Book book = bookRepo.findByTitle("Twilight");
 		Loan loan = new Loan(book, person);
-		Loan recordedLoan = controller.recordNewLoans(loan);
+		Loan recordedLoan = controller.loanBook(loan);
 		Assert.assertNotNull(recordedLoan);
 	}
 
