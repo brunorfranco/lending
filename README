@@ -1,0 +1,5 @@
+Lombok is required so please install it on your IDE for the project to compile: https://www.baeldung.com/lombok-ide
+JRE 8 or above required (lambda expressions used throughout the code base) 
+TODO 
+	create business based exceptions
+	GIT CLI: https://docs.github.com/en/get-started/importing-your-projects-to-github/importing-source-code-to-github/adding-locally-hosted-code-to-github
