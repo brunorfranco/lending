@@ -35,8 +35,8 @@ public class BookController {
 		return bookService.add(book);
 	}
 
-	@DeleteMapping("/books/{id}")
-	public void deleteBook(@PathVariable String title, String author) {
+	@DeleteMapping("/books/{title}/{author}")
+	public void deleteBook(@PathVariable("title") String title, @PathVariable("author") String author) {
 		bookService.remove(bookService.findById(title, author));
 	}
 
@@ -45,8 +45,8 @@ public class BookController {
 		return bookService.findAll();
 	}
 
-	@GetMapping("/books/{id}")
-	public Optional<Book> retrieveBook(@PathVariable String title, String author) {
+	@GetMapping("/books/{title}/{author}")
+	public Optional<Book> retrieveBook(@PathVariable("title") String title, @PathVariable("author") String author) {
 		return bookService.findById(title, author);
 	}
 
